@@ -32,8 +32,8 @@ die()
 
 write_csv_headers()
 {
-	echo "MultiGP Race $race,$url" > $csv
-	echo "Name,Freq,Round 1,Round 2,Round 3,Round 4,Round 5,Round 6,Round 7,Round 8,Round 9,Final Points" >> $csv
+	echo "MultiGP Race $race" > $csv
+	echo "Name,Freq,SC,Vid,1,2,3,4,5,6,7,Total" >> $csv
 }
 
 write_csv_footer()
@@ -44,6 +44,9 @@ write_csv_footer()
 	echo "C,,,,,,,,,,," >> $csv
 	echo "D,,,,,,,,,,," >> $csv
 	echo "E,,,,,,,,,,," >> $csv
+	echo "F,,,,,,,,,,," >> $csv
+	echo "G,,,,,,,,,,," >> $csv
+	echo "H,,,,,,,,,,," >> $csv
 }
 
 [ -n "$1" ] || die "Please provide a race number or URL"
@@ -65,7 +68,7 @@ case "$1" in
 esac
 csv="./$race.csv"
 
-freq_regex="[0-9]{4}\ [A-Z]\ [0-9]"
+freq_regex="[0-9]{4}\ [A-Z]+[0-9]"
 pilot_regex="[0-9]+..[A-Z].[0-9]{4}\ (.*)"
 
 parse=''
@@ -189,7 +192,7 @@ do_login_mode()
 				[[ "$pilot" == "[EMPTY]" ]] && pilot=''
 			fi
 			if [[ $line =~ $freq_regex ]]; then
-				freq="$line"
+				freq="${line#*    }"
 				echo "$pilot,$freq,,,,,,,,,," >> $csv
 			fi
 		fi
