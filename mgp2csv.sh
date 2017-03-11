@@ -33,7 +33,7 @@ die()
 write_csv_headers()
 {
 	echo "MultiGP Race $race" > $csv
-	echo "Name,Freq,SC,Vid,1,2,3,4,5,6,7,Total" >> $csv
+	echo "Name,Freq,SC,Vid,Paid,1,2,3,4,5,Total,Position" >> $csv
 }
 
 write_csv_footer()
