@@ -36,19 +36,6 @@ write_csv_headers()
 	echo "Name,Freq,SC,Vid,Paid,1,2,3,4,5,Total,Position" >> $csv
 }
 
-write_csv_footer()
-{
-	echo "Misc" >> $csv
-	echo "A,,,,,,,,,,," >> $csv
-	echo "B,,,,,,,,,,," >> $csv
-	echo "C,,,,,,,,,,," >> $csv
-	echo "D,,,,,,,,,,," >> $csv
-	echo "E,,,,,,,,,,," >> $csv
-	echo "F,,,,,,,,,,," >> $csv
-	echo "G,,,,,,,,,,," >> $csv
-	echo "H,,,,,,,,,,," >> $csv
-}
-
 [ -n "$1" ] || die "Please provide a race number or URL"
 
 url_race_regex="$base_url/([0-9]+)/.*"
@@ -146,7 +133,6 @@ do_public_mode()
 			[[ "$line" == *"Administration"* ]] && continue
 		fi
 	done < $dump
-	write_csv_footer
 }
 
 heat=''
@@ -197,7 +183,6 @@ do_login_mode()
 			fi
 		fi
 	done < $dump
-	write_csv_footer
 }
 
 ## main ##
