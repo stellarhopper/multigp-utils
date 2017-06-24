@@ -4,7 +4,6 @@ base_url="http://www.multigp.com/races/view"
 dump="./race_file_raw"
 authfile="./auth"
 login_url="http://www.multigp.com/user/site/login"
-lt_class="Multigp 4s"
 
 cleanup()
 {
@@ -55,7 +54,6 @@ case "$1" in
 	;;
 esac
 csv="./$race.csv"
-lt_tmpl="./$race.lt.csv"
 
 freq_regex="[0-9]{4}\ [A-Z]+[0-9]"
 pilot_regex="[0-9]+..[A-Z].[0-9]{4}\ (.*)"
@@ -187,45 +185,10 @@ do_login_mode()
 	done < $dump
 }
 
-do_livetime_template()
-{
-	[ -s $dump ] || die "error reading the race page"
-	echo "FirstName,LastName,NickName,ClassName,PermanentNumber,PrimaryColor,SecondaryColor,TransponderNumber,CarID,EventRegistrationNumber,SponsorName,Country,City,State" > $lt_tmpl
-
-	# main parsing loop
-	while IFS= read -r line; do
-		[ -z "$line" ] && continue
-		[[ "$line" == "Round #1" ]] && parse=1 && continue # start parsing
-		[[ "$line" == "Round #2" ]] && parse='' # stop when reached
-		[[ "$line" == "Pilots Racing" ]] && parse='' # stop when reached
-		[ -n "$parse" ] || continue
-		[[ "$line" == *"All Races"* ]] && continue
-		echo $line
-
-		if [[ "$line" =~ 1..Heat.([0-9]+) ]]; then
-			heat="${BASH_REMATCH[1]}"
-		fi
-		if [ -n "$heat" ]; then
-			if [[ $line =~ $pilot_regex ]]; then
-				pilot="${BASH_REMATCH[1]}"
-				pilot=$(cut -d' ' -f1 <<< $pilot)
-				[[ "$pilot" == "[EMPTY]" ]] && pilot=''
-				[ -n "$pilot" ] && echo "$pilot,$pilot,$pilot,$lt_class,,,,,,,,,," >> $lt_tmpl
-			fi
-			if [[ $line =~ $freq_regex ]]; then
-				freq="${line#*    }"
-				continue
-			fi
-		fi
-	done < $dump
-}
-
-
 ## main ##
 
 if [ -s "$authfile" ]; then
 	do_login_mode
-	do_livetime_template
 else
 	do_public_mode
 fi
