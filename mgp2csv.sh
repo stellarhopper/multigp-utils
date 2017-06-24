@@ -160,9 +160,10 @@ do_login_mode()
 	write_csv_headers
 	while IFS= read -r line; do
 		[ -z "$line" ] && continue
-		[[ "$line" == "Round #1" ]] && parse=1 && continue # start parsing
+		[[ "$line" == "Round #1" ]] && parse=1 # start parsing
 		[[ "$line" == "Round #2" ]] && parse='' # stop when reached
-		[[ "$line" == "Pilots Racing" ]] && parse='' # stop when reached
+		[[ "$line" == "Pilots Racing"* ]] && parse='' # stop when reached
+		[ -n "$parse" ] && [ -z "$line" ] && echo"" && continue
 		[ -n "$parse" ] || continue
 		[[ "$line" == *"All Races"* ]] && continue
 		echo $line
