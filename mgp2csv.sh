@@ -1,9 +1,9 @@
 #!/bin/bash 
 
-base_url="http://www.multigp.com/races/view"
+base_url="http://www.multigp.com/mgp/races/view"
 dump="./race_file_raw"
 authfile="./auth"
-login_url="http://www.multigp.com/user/site/login"
+login_url="http://www.multigp.com/mgp/user/site/login"
 
 cleanup()
 {
@@ -11,6 +11,7 @@ cleanup()
 	[ -f convert.php ] && rm -f convert.php
 	#[ -f $dump ] && rm -f $dump
 	[ -f race.html ] && rm -f race.html
+	[ -f login.html ] && rm -f login.html
 }
 
 warn()
@@ -149,8 +150,8 @@ do_login_mode()
 		--data "LoginForm[username]=$user" \
 		--data "LoginForm[password]=$pass" \
 		--data 'yt0=Log in' \
-		--location \
-		--output $dump $login_url
+		--output login.html \
+		--location $login_url
 
 	# download the race dump
 	curl -s --cookie cjar --cookie-jar cjar --output race.html --location $url
